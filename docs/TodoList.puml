@@ -1,0 +1,31 @@
+@startuml
+
+class TodoListApplication {
+    +start (): void
+    +main (): void
+}
+
+Application <|-- TodoListApplication
+
+class TodoListController {
+    -Button addButton
+    -MenuItem clear
+    -MenuItem completeItem
+    -MenuItem delete
+    -MenuItem incompleteItem
+    -MenuItem openFile
+    -MenuItem saveToFile
+    -TextField descriptionTextField
+    -TextField dueDateTextField
+    -TextField titleTextField
+    -ListView<?> taskList
+
+    addTask (ActionEvent event): void
+    clearList (ActionEvent event): void
+    deleteTask (ActionEvent event): void
+    openExistingFile (ActionEvent event): void
+    viewCompleted (ActionEvent event): void
+    viewIncompleted (ActionEvent event): void
+    writeToFile (ActionEvent event): void
+}
+@enduml
