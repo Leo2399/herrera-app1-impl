@@ -16,9 +16,12 @@ class TodoListController {
     -MenuItem openFile
     -MenuItem saveToFile
     -TextField descriptionTextField
-    -TextField dueDateTextField
+    -DatePicker dueDate
     -TextField titleTextField
-    -ListView<?> taskList
+    -TableView<Events> taskList
+    -TableColumn<Events, String> titleCol
+    -TableColumn<Events, String> descriptionCol
+    -TableColumn<Events, LocalDate> dateCol
 
     addTask (ActionEvent event): void
     clearList (ActionEvent event): void
@@ -28,4 +31,24 @@ class TodoListController {
     viewIncompleted (ActionEvent event): void
     writeToFile (ActionEvent event): void
 }
+
+class Events {
+    -SimpleStringProperty title
+    -SimpleStringProperty description
+    -SimpleObjectProperty<LocalDate> dueDate
+
+    +Events (String title, String description, LocalDate dueDate)
+    +getTitle ():String
+    +setTitle (String title):void
+    +titleProperty ():SimpleStringProperty
+    +getDescription ():String
+    +setDescription (String description):void
+    +descriptionProperty ():SimpleStringProperty
+    +getDueDate ():LocalDate
+    +setDueDate (LocalDate dueDate):void
+    +dueDateProperty ():SimpleObjectProperty<LocalDate>
+
+}
+
+TodoListController<--Events
 @enduml
