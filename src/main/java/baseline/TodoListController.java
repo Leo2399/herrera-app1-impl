@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 import java.lang.invoke.StringConcatException;
 import java.net.URL;
@@ -68,11 +69,16 @@ public class TodoListController implements Initializable {
         list.add(new Events(titleTextField.getText(), descriptionTextField.getText(), dueDate.getValue()));
         itemList.setItems(list);
 
+        // Allow editing by double-clicking
+        itemList.setEditable(true);
+
         // Add to the Title column
         titleCol.setCellValueFactory(param -> param.getValue().titleProperty());
 
-        // Add to the Description column
+        // Add to the Description column and allow editing
         descriptionCol.setCellValueFactory(param -> param.getValue().descriptionProperty());
+        descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        descriptionCol.setOnEditCommit(event1 -> event1.getTableView().getItems().get(event1.getTablePosition().getRow()).setDescription(event1.getNewValue()));
 
         // Add to the Due Date column
         dateCol.setCellValueFactory(param -> param.getValue().dueDateProperty());
@@ -100,16 +106,7 @@ public class TodoListController implements Initializable {
         // This method will delete a specific task from the list
 
         // Delete the highlighted item
-        int selected = itemList.getSelectionModel().getSelectedIndex();
-
-        if(selected != -1){
-            final int newSelectedIdx = (selected == itemList.getItems().size() - 1)
-                    ? selected - 1
-                    : selected;
-
-            itemList.getItems().remove(selected);
-            itemList.getSelectionModel().select(newSelectedIdx);
-        }
+        itemList.getItems().removeAll(itemList.getSelectionModel().getSelectedItem());
 
         // Decrements to keep track of remaining items in the list
         itemCount--;
