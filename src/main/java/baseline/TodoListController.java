@@ -2,6 +2,7 @@ package baseline;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -14,21 +15,16 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import java.lang.invoke.StringConcatException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class TodoListController implements Initializable {
-
-    @FXML
-    private MenuItem completeItem;
 
     @FXML
     private TextField descriptionTextField;
 
     @FXML
     private DatePicker dueDate;
-
-    @FXML
-    private MenuItem incompleteItem;
 
     @FXML
     private MenuItem openFile;
@@ -56,6 +52,10 @@ public class TodoListController implements Initializable {
 
     @FXML
     private TableColumn<Events, String> statusCol;
+
+    @FXML
+    private ComboBox<String> filterBox;
+
 
     private static int itemCount = 0;
     private String string = "Item: ";
@@ -126,19 +126,21 @@ public class TodoListController implements Initializable {
     }
 
     @FXML
+    void filterList(ActionEvent event) {
+        // Filters between complete and incomplete items
+        FilteredList<Events> selected = new FilteredList<>(list, i -> Objects.equals(i.getStatus(), filterBox.getSelectionModel().getSelectedItem()));
+        itemList.setItems(selected);
+
+        // Resets list to show all items
+        if(selected.isEmpty()){
+            itemList.setItems(list);
+        }
+    }
+
+    @FXML
     void openExistingFile(ActionEvent event) {
         // Will open a file with existing items in a list
         // Choose the file you want to open
-    }
-
-    @FXML
-    void viewCompleted(ActionEvent event) {
-        // Display only the completed tasks in the list
-    }
-
-    @FXML
-    void viewIncompleted(ActionEvent event) {
-        // Display only the incomplete tasks in the list
     }
 
     @FXML
@@ -162,6 +164,8 @@ public class TodoListController implements Initializable {
 
         // Limit characters for the description to 256
         textLimiter(descriptionTextField, 256);
+
+        filterBox.getItems().addAll("All", "Complete", "Incomplete");
     }
 
 }
