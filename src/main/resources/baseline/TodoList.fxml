@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -26,12 +27,6 @@
                   <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#openExistingFile" text="Open..." />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="View">
-              <items>
-                <MenuItem fx:id="completeItem" mnemonicParsing="false" onAction="#viewCompleted" text="Completed" />
-                  <MenuItem fx:id="incompleteItem" mnemonicParsing="false" onAction="#viewIncompleted" text="Incompleted" />
-              </items>
-            </Menu>
         </menus>
       </MenuBar>
       <GridPane layoutX="128.0" layoutY="53.0" prefHeight="30.0" prefWidth="964.0">
@@ -70,7 +65,7 @@
       <Separator layoutX="21.0" layoutY="87.0" prefHeight="3.0" prefWidth="1053.0" />
       <Separator layoutX="21.0" layoutY="45.0" prefHeight="3.0" prefWidth="1053.0" />
       <Label fx:id="label" layoutX="20.0" layoutY="606.0" />
-      <TableView fx:id="itemList" layoutX="23.0" layoutY="92.0" prefHeight="453.0" prefWidth="1053.0">
+      <TableView fx:id="itemList" layoutX="21.0" layoutY="147.0" prefHeight="453.0" prefWidth="1053.0">
         <columns>
           <TableColumn fx:id="titleCol" prefWidth="90.40002250671387" text="Title" />
           <TableColumn fx:id="dateCol" prefWidth="82.39997100830078" text="Due Date" />
@@ -78,7 +73,8 @@
             <TableColumn fx:id="statusCol" prefWidth="120.0" text="Status" />
         </columns>
       </TableView>
-      <Button fx:id="deleteButton" layoutX="21.0" layoutY="560.0" mnemonicParsing="false" onAction="#deleteTask" text="Delete" />
-      <Button fx:id="clearButton" layoutX="86.0" layoutY="560.0" mnemonicParsing="false" onAction="#clearList" text="Clear all" />
+      <Button fx:id="deleteButton" layoutX="23.0" layoutY="100.0" mnemonicParsing="false" onAction="#deleteTask" prefHeight="25.0" prefWidth="90.0" text="Delete" />
+      <Button fx:id="clearButton" alignment="CENTER" contentDisplay="CENTER" layoutX="133.0" layoutY="100.0" mnemonicParsing="false" onAction="#clearList" prefHeight="25.0" prefWidth="113.0" text="Clear all" />
+      <ComboBox fx:id="filterBox" layoutX="279.0" layoutY="100.0" onAction="#filterList" prefWidth="150.0" promptText="Filter List" />
    </children>
 </AnchorPane>
