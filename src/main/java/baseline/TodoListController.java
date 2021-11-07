@@ -56,7 +56,6 @@ public class TodoListController implements Initializable {
     @FXML
     private ComboBox<String> filterBox;
 
-
     private static int itemCount = 0;
     private String string = "Item: ";
 
@@ -77,6 +76,18 @@ public class TodoListController implements Initializable {
         // Allow editing by double-clicking
         itemList.setEditable(true);
 
+        if(titleTextField.getText().equals("") || descriptionTextField.getText().equals("")){
+            itemList.getItems().clear();
+
+            titleTextField.setText("Enter title");
+            titleTextField.selectAll();
+            titleTextField.requestFocus();
+
+            descriptionTextField.setText("Enter description");
+            descriptionTextField.selectAll();
+            descriptionTextField.requestFocus();
+        }
+
         // Add to the Title column
         titleCol.setCellValueFactory(param -> param.getValue().titleProperty());
 
@@ -84,6 +95,8 @@ public class TodoListController implements Initializable {
         descriptionCol.setCellValueFactory(param -> param.getValue().descriptionProperty());
         descriptionCol.setCellFactory(edit -> new WrapAndEditCell());
         descriptionCol.setOnEditCommit(event1 -> event1.getTableView().getItems().get(event1.getTablePosition().getRow()).setDescription(event1.getNewValue()));
+
+
 
         // Add to the Due Date column
         dateCol.setCellValueFactory(param -> param.getValue().dueDateProperty());
