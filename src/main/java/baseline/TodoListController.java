@@ -82,7 +82,7 @@ public class TodoListController implements Initializable {
 
         // Add to the Description column and allow editing
         descriptionCol.setCellValueFactory(param -> param.getValue().descriptionProperty());
-        descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        descriptionCol.setCellFactory(edit -> new WrapAndEditCell());
         descriptionCol.setOnEditCommit(event1 -> event1.getTableView().getItems().get(event1.getTablePosition().getRow()).setDescription(event1.getNewValue()));
 
         // Add to the Due Date column
@@ -147,9 +147,21 @@ public class TodoListController implements Initializable {
         // Open a new file writer and write the current list into the text file
     }
 
+    private void textLimiter(final TextField tf, final int maxLength){
+        tf.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(tf.getText().length()>maxLength){
+                String s = tf.getText().substring(0,maxLength);
+                tf.setText(s);
+            }
+        });
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb){
         label.setText(string+itemCount);
+
+        // Limit characters for the description to 256
+        textLimiter(descriptionTextField, 256);
     }
 
 }
