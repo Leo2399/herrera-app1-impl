@@ -10,11 +10,13 @@ public class Events {
     private final SimpleStringProperty title;
     private final SimpleStringProperty description;
     private final SimpleObjectProperty<LocalDate> dueDate;
+    private final SimpleStringProperty status;
 
     public Events(String title, String description, LocalDate dueDate){
         this.title = new SimpleStringProperty(title);
         this.description = new SimpleStringProperty(description);
         this.dueDate = new SimpleObjectProperty<>(dueDate);
+        this.status = new SimpleStringProperty("Incomplete");
     }
 
 
@@ -52,5 +54,17 @@ public class Events {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate.set(dueDate);
+    }
+
+    public String getStatus() {
+        return status.get();
+    }
+
+    public SimpleStringProperty statusProperty() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status.set(status);
     }
 }
