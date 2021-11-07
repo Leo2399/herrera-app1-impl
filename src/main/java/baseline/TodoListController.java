@@ -7,6 +7,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 
@@ -53,7 +54,11 @@ public class TodoListController implements Initializable {
     @FXML
     private Label label;
 
+    @FXML
+    private TableColumn<Events, String> statusCol;
+
     private static int itemCount = 0;
+    private String string = "Item: ";
 
     private final ObservableList <Events> list = FXCollections.observableArrayList();
 
@@ -63,7 +68,7 @@ public class TodoListController implements Initializable {
 
         // Counter to keep track of the number if items
         itemCount++;
-        label.setText("Number of items in list: " + itemCount);
+        label.setText(string + itemCount);
 
         // Add date to the observable list and then into the TableView
         list.add(new Events(titleTextField.getText(), descriptionTextField.getText(), dueDate.getValue()));
@@ -83,6 +88,10 @@ public class TodoListController implements Initializable {
         // Add to the Due Date column
         dateCol.setCellValueFactory(param -> param.getValue().dueDateProperty());
 
+        // Add initial incomplete status to the Status column than can be changed to complete
+        statusCol.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Complete")));
+        statusCol.setCellValueFactory(param -> param.getValue().statusProperty());
+
         // Clear the text fields and reset the date picker
         titleTextField.clear();
         descriptionTextField.clear();
@@ -98,7 +107,7 @@ public class TodoListController implements Initializable {
 
         // Reset the counter to zero
         itemCount = 0;
-        label.setText("Number of items in the list: "+itemCount);
+        label.setText(string+itemCount);
     }
 
     @FXML
@@ -110,7 +119,10 @@ public class TodoListController implements Initializable {
 
         // Decrements to keep track of remaining items in the list
         itemCount--;
-        label.setText("Number of items: "+itemCount);
+        if(itemCount<0){
+            itemCount=0;
+        }
+        label.setText(string+itemCount);
     }
 
     @FXML
@@ -137,7 +149,7 @@ public class TodoListController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        label.setText("Number of items in the list: "+itemCount);
+        label.setText(string+itemCount);
     }
 
 }
