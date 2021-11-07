@@ -11,7 +11,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.converter.LocalDateStringConverter;
+import javafx.util.converter.LocalDateTimeStringConverter;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.invoke.StringConcatException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -56,6 +64,9 @@ public class TodoListController implements Initializable {
     @FXML
     private ComboBox<String> filterBox;
 
+    @FXML
+    private MenuBar fileMenu;
+
     private static int itemCount = 0;
     private String string = "Item: ";
 
@@ -70,7 +81,7 @@ public class TodoListController implements Initializable {
         label.setText(string + itemCount);
 
         // Add date to the observable list and then into the TableView
-        list.add(new Events(titleTextField.getText(), descriptionTextField.getText(), dueDate.getValue()));
+        list.add(new Events(titleTextField.getText(), descriptionTextField.getText()));
         itemList.setItems(list);
 
         // Allow editing by double-clicking
@@ -94,12 +105,11 @@ public class TodoListController implements Initializable {
         // Add to the Description column and allow editing
         descriptionCol.setCellValueFactory(param -> param.getValue().descriptionProperty());
         descriptionCol.setCellFactory(edit -> new WrapAndEditCell());
-        descriptionCol.setOnEditCommit(event1 -> event1.getTableView().getItems().get(event1.getTablePosition().getRow()).setDescription(event1.getNewValue()));
-
-
 
         // Add to the Due Date column
         dateCol.setCellValueFactory(param -> param.getValue().dueDateProperty());
+        dateCol.setEditable(true);
+        dateCol.setCellFactory(LocalDateTableCell::new);
 
         // Add initial incomplete status to the Status column than can be changed to complete
         statusCol.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Complete")));
@@ -108,7 +118,6 @@ public class TodoListController implements Initializable {
         // Clear the text fields and reset the date picker
         titleTextField.clear();
         descriptionTextField.clear();
-        dueDate.setValue(null);
     }
 
     @FXML
@@ -157,10 +166,54 @@ public class TodoListController implements Initializable {
     }
 
     @FXML
-    void writeToFile(ActionEvent event) {
+    void writeToFile(ActionEvent event) throws IOException {
         // Save the current list into a text file
         // Open a new file writer and write the current list into the text file
+        Stage newStage = new Stage();
+
+        // Use fileChooser javafx class
+        FileChooser saveFile = new FileChooser();
+
+        // Set the title
+        saveFile.setTitle("Save list");
+
+        // Set the extension type to txt and set the initial directory
+        saveFile.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text file","*.txt"));
+        saveFile.setInitialDirectory(new File("C:\\temp"));
+
+        // Checks for empty table to make sure one isn't saved
+        if(list.isEmpty()){
+            newStage.initOwner(this.fileMenu.getScene().getWindow());
+            Alert empty = new Alert(Alert.AlertType.ERROR, "Empty table", ButtonType.OK);
+            empty.setContentText("You have nothing");
+        }else{
+            File file = saveFile.showSaveDialog(newStage);
+            if(file!=null){
+                save(itemList.getItems(), file);
+            }
+        }
     }
+
+    private void save(ObservableList<Events> e, File file) throws IOException {
+
+        // Helper method used to write the data from the table into the text file
+            try (BufferedWriter output = new BufferedWriter(new FileWriter(file))) {
+
+                for (Events events : e) {
+                    output.write(events.toString());
+                    output.newLine();
+                }
+
+            } catch(IOException ex){
+            Alert ioAlert = new Alert(Alert.AlertType.ERROR,"No file", ButtonType.OK);
+            ioAlert.setContentText("File could not be created");
+            ioAlert.showAndWait();
+            if(ioAlert.getResult()==ButtonType.OK){
+                ioAlert.close();
+            }
+        }
+    }
+
 
     private void textLimiter(final TextField tf, final int maxLength){
         tf.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -179,6 +232,7 @@ public class TodoListController implements Initializable {
         textLimiter(descriptionTextField, 256);
 
         filterBox.getItems().addAll("All", "Complete", "Incomplete");
+
     }
 
 }
