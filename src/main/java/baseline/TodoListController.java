@@ -117,7 +117,7 @@ public class TodoListController implements Initializable {
         // Delete the highlighted item
         itemList.getItems().removeAll(itemList.getSelectionModel().getSelectedItem());
 
-        // Decrements to keep track of remaining items in the list
+        // Keep track of remaining items in the list
         itemCount--;
         if(itemCount<0){
             itemCount=0;
