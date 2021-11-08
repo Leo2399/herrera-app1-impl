@@ -8,20 +8,16 @@ class TodoListApplication {
 Application <|-- TodoListApplication
 
 class TodoListController {
-    -Button addButton
-    -MenuItem clear
-    -MenuItem completeItem
-    -MenuItem delete
-    -MenuItem incompleteItem
-    -MenuItem openFile
-    -MenuItem saveToFile
+
+    -MenuBar fileMenu
     -TextField descriptionTextField
-    -DatePicker dueDate
     -TextField titleTextField
-    -TableView<Events> taskList
+    -TableView<Events> itemList
     -TableColumn<Events, String> titleCol
     -TableColumn<Events, String> descriptionCol
     -TableColumn<Events, LocalDate> dateCol
+    -TableColumn<Events, String> statusCol
+    -ComboBox<String> filterBox
 
     addTask (ActionEvent event): void
     clearList (ActionEvent event): void
@@ -37,7 +33,7 @@ class Events {
     -SimpleStringProperty description
     -SimpleObjectProperty<LocalDate> dueDate
 
-    +Events (String title, String description, LocalDate dueDate)
+    +Events (String title, String description)
     +getTitle ():String
     +setTitle (String title):void
     +titleProperty ():SimpleStringProperty
@@ -51,4 +47,27 @@ class Events {
 }
 
 TodoListController<--Events
+
+class LocalDateTableCell{
+    -DateTimeFormatter formatter
+    -DatePicker datePicker
+
+    +LocalDateTableCell(TableColumn<Events, LocalDate> dateTableColumn)
+    #updateItem(LocalDate item, boolean empty): void
+}
+
+class WrapAndEditCell {
+    -Text cellText
+
+    +WrapAndEditCell ()
+    +updateItem (String item, boolean empty):void
+    +cancelEdit ():void
+    -createText ():Text
+}
+
+TodoListController <-- LocalDateTableCell
+TodoListController <-- WrapAndEditCell
+
+TextFieldTableCell <|-- WrapAndEditCell
+TableCell <|-- LocalDateTableCell
 @enduml
