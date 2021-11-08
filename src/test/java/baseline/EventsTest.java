@@ -18,6 +18,15 @@ class EventsTest {
         events = new Events("Title", "Description");
     }
 
+    @Test
+    void testFactoryMethods(){
+        assertEquals("Title",events.getTitle());
+        assertEquals("Description",events.getDescription());
+        assertEquals(LocalDate.now(),events.getDueDate());
+        assertEquals("Incomplete", events.getStatus());
+
+        System.out.println("All match");
+    }
     /*
     Testing to make sure data toString is giving the correct data
      */
