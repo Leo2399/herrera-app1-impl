@@ -10,7 +10,7 @@ import java.time.format.FormatStyle;
 
 public class LocalDateTableCell extends TableCell<Events, LocalDate> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
-    private DatePicker datePicker;
+    private final DatePicker datePicker;
 
     public LocalDateTableCell(TableColumn<Events, LocalDate> dateTableColumn){
         this.datePicker = new DatePicker();
@@ -23,7 +23,7 @@ public class LocalDateTableCell extends TableCell<Events, LocalDate> {
                 if (object != null) {
                     return dateTimeFormatter.format(object);
                 }
-                return "";
+                return " ";
             }
 
             @Override
@@ -32,7 +32,7 @@ public class LocalDateTableCell extends TableCell<Events, LocalDate> {
                 if (string != null && string.isEmpty()) {
                     return LocalDate.parse(string, dateTimeFormatter);
                 }else{
-                    return null;
+                    return LocalDate.parse(" ");
                 }
             }
         });
@@ -58,13 +58,13 @@ public class LocalDateTableCell extends TableCell<Events, LocalDate> {
         super.updateItem(item,empty);
 
         if(empty){
-            setText(null);
+            setText(" ");
             setGraphic(null);
         }else{
             this.datePicker.setValue(item);
             setGraphic(this.datePicker);
             if(item==null){
-                setText(null);
+                setText(" ");
             }else{
                 setText(formatter.format(item));
             }
